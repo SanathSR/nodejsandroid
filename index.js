@@ -134,7 +134,7 @@ async function readDirRecursive(dir) {
             result[entry.name] = await readDirRecursive(fullPath);
         } else {
             // For files, you can just list the filename or null if you prefer
-            result[entry.name] = null;
+            result[entry.name] = "File";
         }
     }
 
@@ -142,12 +142,52 @@ async function readDirRecursive(dir) {
 }
 
 // New GET endpoint to list entire FILES directory tree
-app.get('/list-folders', async (req, res) => {
+app.get('/listfolders', async (req, res) => {
     try {
         const tree = await readDirRecursive(BASE_DIR);
         res.json(tree);
     } catch (error) {
         console.error('Error reading folders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// DELETE endpoint triggered via GET for convenience (not recommended for production)
+app.get('/deletefolder', async (req, res) => {
+    try {
+        const { sanath, folder } = req.query;
+
+        // Basic security/auth check
+        if (sanath !== 'ns') {
+            return res.status(403).json({ error: '' });
+        }
+
+        if (!folder) {
+            return res.status(400).json({ error: 'folder required' });
+        }
+
+        if (folder === 'all') {
+            // Remove all contents inside BASE_DIR but not BASE_DIR itself
+            const contents = await fs.readdir(BASE_DIR);
+            for (const item of contents) {
+                const itemPath = path.join(BASE_DIR, item);
+                await fs.remove(itemPath);
+            }
+            console.log('All folders deleted inside FILES');
+            return res.json({ message: 'All folders and files deleted inside FILES' });
+        } else {
+            const targetPath = path.join(BASE_DIR, folder);
+            if (!fs.existsSync(targetPath)) {
+                return res.status(404).json({ error: `Folder "${folder}" not found` });
+            }
+
+            await fs.remove(targetPath);
+            console.log(`Folder ${folder} deleted`);
+            return res.json({ message: `Folder "${folder}" deleted successfully` });
+        }
+
+    } catch (error) {
+        console.error('Delete folder error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
