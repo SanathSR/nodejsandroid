@@ -36,7 +36,6 @@ app.use('/uploads', express.static(uploadDir));
 // Multiple file upload endpoint
 app.post('/upload', upload.array('media', 10), (req, res) => {
     console.log("sanath",req.body)
-    console.log("sanathsanath",req.query)
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: 'No files uploaded' });
     }
@@ -44,8 +43,8 @@ app.post('/upload', upload.array('media', 10), (req, res) => {
         return `${req.protocol}://${req.get('host')}/uploads/${file.filename}`;
     });
 
-    console.log(`[+] ${fileUrls.length} file(s) uploaded.`);
-    console.log(fileUrls)
+    console.log(`[+] ${fileUrls} file(s) uploaded.`);
+    
     res.json({
         message: 'Files uploaded successfully',
         files: fileUrls
