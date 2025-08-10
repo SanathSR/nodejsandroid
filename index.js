@@ -59,7 +59,7 @@ app.post('/upload', upload.single('media'), async (req, res) => {
         // Save the file buffer to the target folder
         const savePath = path.join(targetDir, filename);
         await fs.writeFile(savePath, file.buffer);
-
+        console.log("File uploaded successfully", file_path)
         // Respond with path info
         res.json({
             message: 'File uploaded successfully',
@@ -107,7 +107,7 @@ app.get('/download', async (req, res) => {
         archive.on('error', err => {
             throw err;
         });
-
+        console.log("Downloaded ", date)
         archive.pipe(res);
 
         // Append folder to archive
