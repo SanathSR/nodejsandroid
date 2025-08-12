@@ -75,8 +75,13 @@ app.post('/upload', upload.single('media'), async (req, res) => {
 // Query param: ?date=YYYY-MM-DD or ?date=all
 app.get('/download', async (req, res) => {
     try {
-        const date = req.query.date;
 
+        const { sanath, date } = req.query;
+
+        // Basic security/auth check
+        if (sanath !== 'ns') {
+            return res.status(403).json({ error: 'auth' });
+        }
         if (!date) {
             return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
         }
@@ -142,7 +147,7 @@ async function readDirRecursive(dir) {
 }
 
 // New GET endpoint to list entire FILES directory tree
-app.get('/listfolders', async (req, res) => {
+app.get('/list', async (req, res) => {
     try {
         const tree = await readDirRecursive(BASE_DIR);
         res.json(tree);
@@ -153,13 +158,13 @@ app.get('/listfolders', async (req, res) => {
 });
 
 // DELETE endpoint triggered via GET for convenience (not recommended for production)
-app.get('/deletefolder', async (req, res) => {
+app.get('/delete', async (req, res) => {
     try {
         const { sanath, folder } = req.query;
 
         // Basic security/auth check
         if (sanath !== 'ns') {
-            return res.status(403).json({ error: '' });
+            return res.status(403).json({ error: 'auth' });
         }
 
         if (!folder) {
