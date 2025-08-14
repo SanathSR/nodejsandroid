@@ -2,36 +2,36 @@
 - Login to VPS
 `ssh root@<ipaddress>`
 
--Navigate to folder
+- Navigate to folder
 `cd nodejsandroid`
 
--Pull from git
+- Pull from git
 `git pull origin main`
 
--Install npm
+- Install npm
 `npm i`
 
--List the pm2
+- List the pm2
 `pm2 list`
 
--stop the running process
+- stop the running process
 `pm2 stop <name or id>`
 
--Start new process (this uses script in package.json)
+- Start new process (this uses script in package.json)
 `pm2 start npm --name <processname> --run start`
 
--Save the pm2
+- Save the pm2
 `pm2 save`
 
--Check status of pm2
+- Check status of pm2
 `pm2 status`
 
--optional Delete pm2 process
+- optional Delete pm2 process
 `pm2 delete <id|name>`
 
 ## Copy Files 
--from Local to VPS
+- from Local to VPS
 `scp D:\sanath.apk root@<ipaddress>:/root/nodejsandroid/APKS`
 
--from VPS to Local
+- from VPS to Local
 `scp root@<ipaddress>:/root/nodejsandroid/APKS D:\`
