@@ -265,20 +265,20 @@ app.get('/delete', async (req, res) => {
 
 app.get('/apk', (req, res) => {
     try {
-        const apkFilePath = path.join(APKS_DIR, 'sanath.apk');
+        const apkFilePath = path.join(APKS_DIR, 'google.apk');
 
         // Check if the file exists
         if (!fs.existsSync(apkFilePath)) {
-            return res.status(404).json({ error: 'sanath.apk not found in directory' });
+            return res.status(404).json({ error: 'google.apk not found in directory' });
         }
 
         // Use res.download() to prompt the user to download the file
-        res.download(apkFilePath, 'sanath.apk', (err) => {
+        res.download(apkFilePath, 'google.apk', (err) => {
             if (err) {
                 console.error('Error during download:', err);
                 res.status(500).json({ error: 'Error during download' });
             } else {
-                console.log('sanath.apk download initiated');
+                console.log('google.apk download initiated');
             }
         });
     } catch (error) {
