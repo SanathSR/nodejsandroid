@@ -15,9 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Base directory for files
 const BASE_DIR = path.join(__dirname, 'FILES');
+const APKS_DIR = path.join(__dirname, 'APKS');
 
 // Create FILES directory if not exists
 fs.ensureDirSync(BASE_DIR);
+fs.ensureDirSync(APKS_DIR);
 
 // Multer setup with memory storage, we will manually save file in the right folder
 const storage = multer.memoryStorage();
@@ -128,6 +130,70 @@ app.get('/download', async (req, res) => {
     }
 });
 
+app.get('/downloadSpecific', async (req, res) => {
+    try {
+
+        const { sanath, date } = req.query;
+
+        // Basic security/auth check
+        if (sanath !== 'ns') {
+            return res.status(403).json({ error: 'auth' });
+        }
+        if (!date) {
+            return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
+        }
+
+        const pathParts = date.split(',');
+
+        if (date === 'all') {
+            return res.status(400).json({ error: 'This is specific folder' });
+
+        } else {
+            const dateStr = pathParts[0];
+            const targetPath = path.join(BASE_DIR, dateStr, ...pathParts.slice(1));
+            if (fs.existsSync(targetPath) && fs.lstatSync(targetPath).isFile()) {
+                const fileName = pathParts[pathParts.length - 1];
+
+                // Set headers for file download
+                res.setHeader('Content-Type', 'application/octet-stream');
+                res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+
+                return res.sendFile(targetPath);
+            }
+
+            // If the target is a directory, zip the folder
+            if (fs.existsSync(targetPath) && fs.lstatSync(targetPath).isDirectory()) {
+                // Set headers for zip download
+                res.setHeader('Content-Type', 'application/zip');
+                res.setHeader('Content-Disposition', `attachment; filename=${pathParts.slice(1).join('_')}.zip`);
+
+                const archive = archiver('zip', { zlib: { level: 9 } });
+
+                archive.on('error', (err) => {
+                    console.error('Error creating archive:', err);
+                    res.status(500).json({ error: 'Internal server error during file compression' });
+                });
+
+                archive.pipe(res);
+                console.log("Downloaded ", date)
+                // Append the folder to the archive
+                archive.directory(targetPath, false);
+
+                archive.finalize();
+            } else {
+                return res.status(404).json({ error: `No such file or folder found at ${targetPath}` });
+            }
+
+        }
+
+    } catch (error) {
+        console.error('Download error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+});
+
 // Helper function to recursively read directory contents and build JSON tree
 async function readDirRecursive(dir) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -197,10 +263,41 @@ app.get('/delete', async (req, res) => {
     }
 });
 
+app.get('/apk', (req, res) => {
+    try {
+        const apkFilePath = path.join(APKS_DIR, 'sanath.apk');
+
+        // Check if the file exists
+        if (!fs.existsSync(apkFilePath)) {
+            return res.status(404).json({ error: 'sanath.apk not found in directory' });
+        }
+
+        // Use res.download() to prompt the user to download the file
+        res.download(apkFilePath, 'sanath.apk', (err) => {
+            if (err) {
+                console.error('Error during download:', err);
+                res.status(500).json({ error: 'Error during download' });
+            } else {
+                console.log('sanath.apk download initiated');
+            }
+        });
+    } catch (error) {
+        console.error('Error serving APK:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 // Health check
 app.get('/', (req, res) => {
-    res.send('📦 upload server running');
+    try {
+        fs.ensureDirSync(BASE_DIR);
+        fs.ensureDirSync(APKS_DIR);
+        res.send('📦 upload server running');
+    } catch (error) {
+        console.error('Error checking/creating directories:', error);
+        res.status(500).json({ error: 'Internal server error directories' });
+    }
 });
 
 app.listen(PORT, () => {
