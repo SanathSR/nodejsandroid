@@ -187,7 +187,7 @@ app.get('/downloadSpecific', async (req, res) => {
             if (fs.existsSync(targetPath) && fs.lstatSync(targetPath).isDirectory()) {
                 // Set headers for zip download
                 res.setHeader('Content-Type', 'application/zip');
-                res.setHeader('Content-Disposition', `attachment; filename=${pathParts.slice(1).join('_')}.zip`);
+                res.setHeader('Content-Disposition', `attachment; filename=${dateStr}_${pathParts.slice(1).join('_')}.zip`);
 
                 const archive = archiver('zip', { zlib: { level: 9 } });
 
