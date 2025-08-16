@@ -29,7 +29,7 @@
 - optional Delete pm2 process
 `pm2 delete <id|name>`
 
-##Aram
+## ReDeploy Aram
 - Login to VPS
 `ssh root@<ipaddress>`
 
