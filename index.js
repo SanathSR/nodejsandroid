@@ -102,7 +102,7 @@ app.get('/download', async (req, res) => {
         const { sanath, date,sanathapi } = req.query;
         console.log('📥 /download endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns'  && sanathapi !== 'download') {
+        if (sanath !== 'ns'  || sanathapi !== 'download') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -157,7 +157,7 @@ app.get('/downloadSpecific', async (req, res) => {
         const { sanath, date,sanathapi } = req.query;
 
         // Basic security/auth check
-        if (sanath !== 'ns' && sanathapi !== 'downloadSpecific') {
+        if (sanath !== 'ns' || sanathapi !== 'downloadSpecific') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -250,7 +250,7 @@ app.get('/delete', async (req, res) => {
         const { sanath, folder, sanathapi } = req.query;
         console.log('🗑️ /delete endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns' && sanathapi !== 'delete') {
+        if (sanath !== 'ns' || sanathapi !== 'delete') {
             return res.status(403).json({ error: 'auth' });
         }
 
