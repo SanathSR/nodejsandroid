@@ -110,7 +110,7 @@ app.get('/download', async (req, res) => {
         }
 
         let folderToZip;
-
+        console.log('Checking for folder:', date);
         if (date === 'all') {
             folderToZip = BASE_DIR;
         } else {
@@ -119,12 +119,12 @@ app.get('/download', async (req, res) => {
                 return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD or all' });
             }
             folderToZip = path.join(BASE_DIR, date);
+            console.log("folderToZip", folderToZip)
 
-            if (!fs.existsSync(folderToZip)) {
-                return res.status(404).json({ error: `No folder found for date ${date}` });
-            }
         }
-
+        if (!fs.existsSync(folderToZip)) {
+            return res.status(404).json({ error: `No folder found for date ${date}` });
+        }
         // Set response headers for zip download
         res.setHeader('Content-Type', 'application/zip');
         res.setHeader('Content-Disposition', `attachment; filename=${date === 'all' ? 'FILES.zip' : `${date}.zip`}`);
