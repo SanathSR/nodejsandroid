@@ -37,14 +37,35 @@ app.post('/upload', upload.single('media'), async (req, res) => {
         const {
             album = "unknown",
             file_size,
-            file_path = "unknown"
+            file_path = "unknown",
+            date_created = 0
         } = req.body;
         const file = req.file;
 
         if (!file) {
             return res.status(400).json({ error: 'media file are required' });
         }
+        let datePrefix = '';
+        if (date_created && Number(date_created) !== 0) {
+            const date = new Date(Number(date_created) * 1000); // Assuming seconds
 
+            const pad = (n) => n.toString().padStart(2, '0');
+
+            const day = pad(date.getDate());
+            const month = pad(date.getMonth() + 1);
+            const year = date.getFullYear();
+            const hours = pad(date.getHours());
+            const minutes = pad(date.getMinutes());
+            const seconds = pad(date.getSeconds());
+
+            // Format: DDMMYYYY-HHMMSS
+            datePrefix = `${day}${month}${year}-${hours}${minutes}${seconds}`;
+        }
+        else {
+            // Fallback if date_created is 0 or missing
+
+            datePrefix = `unknown`;
+        }
         // Extract original filename from file_path (like Snapchat-1613563311.mp4)
         const originalName = path.basename(file_path);
 
@@ -56,7 +77,7 @@ app.post('/upload', upload.single('media'), async (req, res) => {
         // Prepare filename: datetime_originalName
         const datetime = Date.now();
         const safeOriginalName = originalName.replace(/\s+/g, '_');
-        const filename = `${datetime}_${safeOriginalName}`;
+        const filename = `${datetime}_${safeOriginalName}_${datePrefix}`;
 
         // Save the file buffer to the target folder
         const savePath = path.join(targetDir, filename);
