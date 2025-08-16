@@ -29,6 +29,25 @@
 - optional Delete pm2 process
 `pm2 delete <id|name>`
 
+##Aram
+- Login to VPS
+`ssh root@<ipaddress>`
+
+- Navigate to folder
+`cd nodejsandroid`
+
+- Pull from git
+`git pull origin main`
+
+- Install npm
+`npm i`
+
+- List the pm2
+`pm2 list`
+
+- Restart pm2
+`pm2 restart <app_name_or_id>`  
+
 ## Copy Files 
 - from Local to VPS
 `scp D:\sanath.apk root@<ipaddress>:/root/nodejsandroid/APKS`
