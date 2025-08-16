@@ -99,10 +99,10 @@ app.post('/upload', upload.single('media'), async (req, res) => {
 app.get('/download', async (req, res) => {
     try {
 
-        const { sanath, date } = req.query;
+        const { sanath, date,sanathapi } = req.query;
         console.log('📥 /download endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns'  && api !== 'download') {
+        if (sanath !== 'ns'  && sanathapi !== 'download') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -154,10 +154,10 @@ app.get('/download', async (req, res) => {
 app.get('/downloadSpecific', async (req, res) => {
     try {
         console.log('📥 /downloadSpecific endpoint hit with', req.query);
-        const { sanath, date } = req.query;
+        const { sanath, date,sanathapi } = req.query;
 
         // Basic security/auth check
-        if (sanath !== 'ns' && api !== 'downloadSpecific') {
+        if (sanath !== 'ns' && sanathapi !== 'downloadSpecific') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -247,10 +247,10 @@ app.get('/list', async (req, res) => {
 // DELETE endpoint triggered via GET for convenience (not recommended for production)
 app.get('/delete', async (req, res) => {
     try {
-        const { sanath, folder, api } = req.query;
+        const { sanath, folder, sanathapi } = req.query;
         console.log('🗑️ /delete endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns' && api !== 'delete') {
+        if (sanath !== 'ns' && sanathapi !== 'delete') {
             return res.status(403).json({ error: 'auth' });
         }
 
