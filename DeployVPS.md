@@ -18,7 +18,7 @@
 `pm2 stop <name or id>`
 
 - Start new process (this uses script in package.json)
-`pm2 start npm --name <processname> --run start`
+`pm2 start npm --name <processname> -- run start`
 
 - Save the pm2
 `pm2 save`
