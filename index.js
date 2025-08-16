@@ -100,9 +100,9 @@ app.get('/download', async (req, res) => {
     try {
 
         const { sanath, date } = req.query;
-
+        console.log('📥 /download endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns') {
+        if (sanath !== 'ns'  && api !== 'download') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -153,11 +153,11 @@ app.get('/download', async (req, res) => {
 
 app.get('/downloadSpecific', async (req, res) => {
     try {
-
+        console.log('📥 /downloadSpecific endpoint hit with', req.query);
         const { sanath, date } = req.query;
 
         // Basic security/auth check
-        if (sanath !== 'ns') {
+        if (sanath !== 'ns' && api !== 'downloadSpecific') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
@@ -247,10 +247,10 @@ app.get('/list', async (req, res) => {
 // DELETE endpoint triggered via GET for convenience (not recommended for production)
 app.get('/delete', async (req, res) => {
     try {
-        const { sanath, folder } = req.query;
-
+        const { sanath, folder, api } = req.query;
+        console.log('🗑️ /delete endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns') {
+        if (sanath !== 'ns' && api !== 'delete') {
             return res.status(403).json({ error: 'auth' });
         }
 
