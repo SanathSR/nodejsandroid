@@ -1,3 +1,9 @@
+# API
+`list`
+`downloadSpecific?api=downloadSpecific&sanath=ns&date=`
+`download?api=download&sanath=ns&date=all`
+`delete?api=delete&sanath=ns&folder=`
+
 # Deploy to VPS
 - Login to VPS
 `ssh root@<ipaddress>`
