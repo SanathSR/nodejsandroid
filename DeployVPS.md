@@ -60,3 +60,6 @@
 
 - from VPS to Local
 `scp root@<ipaddress>:/root/nodejsandroid/APKS D:\`
+
+- from VPS to Local (all files)
+`scp -r root@<ipaddress>:/root/nodejsandroid/FILES D:\NS`
