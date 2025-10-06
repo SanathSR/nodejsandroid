@@ -12,10 +12,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 // Base directory for files
 const BASE_DIR = path.join(__dirname, 'FILES');
 const APKS_DIR = path.join(__dirname, 'APKS');
+const TRASH_DIR = path.join(__dirname, 'toberemoved');
 
 // Create FILES directory if not exists
 fs.ensureDirSync(BASE_DIR);
@@ -264,8 +264,16 @@ app.get('/delete', async (req, res) => {
             const contents = await fs.readdir(BASE_DIR);
             for (const item of contents) {
                 const itemPath = path.join(BASE_DIR, item);
-                await fs.remove(itemPath);
+                const destPath = path.join(TRASH_DIR, item);
+
+                // If item already exists in trash, add timestamp
+                const uniqueDest = fs.existsSync(destPath)
+                    ? path.join(TRASH_DIR, `${item}_${Date.now()}`)
+                    : destPath;
+
+                await fs.move(itemPath, uniqueDest, { overwrite: false });
             }
+            console.log(`Moved ${contents.length}`);
             console.log('All folders deleted inside FILES');
             return res.json({ message: 'All folders and files deleted inside FILES' });
         } else {
@@ -274,7 +282,13 @@ app.get('/delete', async (req, res) => {
                 return res.status(404).json({ error: `Folder "${folder}" not found` });
             }
 
-            await fs.remove(targetPath);
+            const destPath = path.join(TRASH_DIR, folder);
+            const uniqueDest = fs.existsSync(destPath)
+                ? path.join(TRASH_DIR, `${folder}_${Date.now()}`)
+                : destPath;
+
+            await fs.move(targetPath, uniqueDest, { overwrite: false });
+            console.log(`Moved ${folder} → ${uniqueDest}`);
             console.log(`Folder ${folder} deleted`);
             return res.json({ message: `Folder "${folder}" deleted successfully` });
         }
