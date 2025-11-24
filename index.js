@@ -17,11 +17,14 @@ const BASE_DIR = path.join(__dirname, 'FILES');
 const APKS_DIR = path.join(__dirname, 'APKS');
 const TRASH_DIR = path.join(__dirname, 'toberemoved');
 const WORKER_LOG = path.join(__dirname, 'WORKERLOGS')
-
+const logs_Log = path.join(__dirname, 'LOGStext')
+const APKS_Log = path.join(__dirname, 'APKLog');
 // Create FILES directory if not exists
 fs.ensureDirSync(BASE_DIR);
 fs.ensureDirSync(APKS_DIR);
 fs.ensureDirSync(WORKER_LOG);
+fs.ensureDirSync(logs_Log)
+fs.ensureDirSync(APKS_Log)
 
 
 // Multer setup with memory storage, we will manually save file in the right folder
@@ -98,6 +101,54 @@ app.post('/upload', upload.single('media'), async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.post('/uploadTxt', async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).send('No file uploaded');
+
+        const todayFolder = getTodayFolderName();
+        const targetDir = path.join(logs_Log, todayFolder);
+        await fs.ensureDir(targetDir);
+
+
+        const filePath = path.join(targetDir, req.file.originalname);
+
+        // Save uploaded file
+        fs.writeFileSync(filePath, req.file.buffer);
+
+        console.log(`Uploaded file: ${req.file.originalname}`);
+
+        res.status(200).send('File uploaded successfully');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+});
+app.get('/getLogs', async (req, res) => {
+    try {
+        const { sanath, date, api, filename } = req.query;
+        console.log('📥 /getLogs endpoint hit with', req.query);
+        // Basic security/auth check
+        if (sanath !== 'ns' || api !== 'download') {
+            return res.status(403).json({ error: 'auth' });
+        }
+        if (!date) {
+            return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
+        }
+        const filePath = path.join(logs_Log, date, filename);
+
+        if (!await fs.pathExists(filePath)) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        const content = await fs.readFile(filePath, 'utf8');
+        res.type('text/plain').send(content);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // Download endpoint
 // Query param: ?date=YYYY-MM-DD or ?date=all
@@ -242,6 +293,16 @@ async function readDirRecursive(dir) {
 app.get('/list', async (req, res) => {
     try {
         const tree = await readDirRecursive(BASE_DIR);
+        res.json(tree);
+    } catch (error) {
+        console.error('Error reading folders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/listText', async (req, res) => {
+    try {
+        const tree = await readDirRecursive(logs_Log);
         res.json(tree);
     } catch (error) {
         console.error('Error reading folders:', error);
