@@ -30,6 +30,8 @@ fs.ensureDirSync(APKS_Log)
 // Multer setup with memory storage, we will manually save file in the right folder
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+const uploadTxt = multer({ storage });
+
 
 // Helper: get today's date folder name YYYY-MM-DD
 function getTodayFolderName() {
@@ -102,28 +104,31 @@ app.post('/upload', upload.single('media'), async (req, res) => {
     }
 });
 
-app.post('/uploadTxt', async (req, res) => {
+app.post('/uploadTxt', upload.single('file'), async (req, res) => {
     try {
-        if (!req.file) return res.status(400).send('No file uploaded');
-
+        console.log("uploadTxt")
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        console.log("uploadTxt")
+        // Create folder for today
         const todayFolder = getTodayFolderName();
-        const targetDir = path.join(logs_Log, todayFolder);
+        const targetDir = path.join(LOGS_DIR, todayFolder);
         await fs.ensureDir(targetDir);
 
+        // Save file
+        const savePath = path.join(targetDir, file.originalname);
+        await fs.writeFile(savePath, file.buffer);
 
-        const filePath = path.join(targetDir, req.file.originalname);
-
-        // Save uploaded file
-        fs.writeFileSync(filePath, req.file.buffer);
-
-        console.log(`Uploaded file: ${req.file.originalname}`);
-
-        res.status(200).send('File uploaded successfully');
+        console.log(`Uploaded file: ${file.originalname} to ${savePath}`);
+        res.status(200).json({ message: 'File uploaded successfully', path: savePath });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Internal server error');
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 app.get('/getLogs', async (req, res) => {
     try {
         const { sanath, date, api, filename } = req.query;
