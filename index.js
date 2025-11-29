@@ -334,7 +334,7 @@ app.get('/listText', async (req, res) => {
 });
 
 // DELETE endpoint triggered via GET for convenience (not recommended for production)
-app.get('/delete', async (req, res) => {
+/* app.get('/delete', async (req, res) => {
     try {
         const { sanath, folder, api } = req.query;
         console.log('🗑️ /delete endpoint hit with', req.query);
@@ -385,7 +385,7 @@ app.get('/delete', async (req, res) => {
         console.error('Delete folder error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-});
+}); */
 
 app.get('/apk', (req, res) => {
     try {
