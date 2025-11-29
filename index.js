@@ -152,7 +152,7 @@ app.get('/getLogs', async (req, res) => {
         const { sanath, date, api, filename } = req.query;
         console.log('📥 /getLogs endpoint hit with', req.query);
         // Basic security/auth check
-        if (sanath !== 'ns' || api !== 'download') {
+        if (sanath !== 'ns' || api !== 'getLogs') {
             return res.status(403).json({ error: 'auth' });
         }
         if (!date) {
