@@ -38,6 +38,16 @@ function getTodayFolderName() {
     const now = new Date();
     return now.toISOString().split('T')[0];
 }
+function getUtcTimestamp() {
+    const now = new Date();
+    const yyyy = now.getUTCFullYear();
+    const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(now.getUTCDate()).padStart(2, '0');
+    const hh = String(now.getUTCHours()).padStart(2, '0');
+    const min = String(now.getUTCMinutes()).padStart(2, '0');
+    const ss = String(now.getUTCSeconds()).padStart(2, '0');
+    return `${yyyy}${mm}${dd}_${hh}${min}${ss}`;
+}
 
 // Upload endpoint
 app.post('/upload', upload.single('media'), async (req, res) => {
@@ -117,8 +127,13 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
         const targetDir = path.join(logs_Log, todayFolder);
         await fs.ensureDir(targetDir);
 
+        const ext = path.extname(file.originalname); // .txt
+        const baseName = path.basename(file.originalname, ext); // log
+
+        // Add UTC timestamp
+        const newFileName = `${baseName}_${getUtcTimestamp()}${ext}`;
         // Save file
-        const savePath = path.join(targetDir, file.originalname);
+        const savePath = path.join(targetDir, newFileName);
         await fs.writeFile(savePath, file.buffer);
 
         console.log(`Uploaded file: ${file.originalname} to ${savePath}`);
