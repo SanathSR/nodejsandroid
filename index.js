@@ -158,7 +158,8 @@ app.get('/getLogs', async (req, res) => {
         if (!date) {
             return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
         }
-        const filePath = path.join(logs_Log, date, filename);
+        const pathParts = filename.split(',');
+        const filePath = path.join(logs_Log, date,  ...pathParts.slice(1));
 
         if (!await fs.pathExists(filePath)) {
             return res.status(404).json({ message: 'File not found' });
