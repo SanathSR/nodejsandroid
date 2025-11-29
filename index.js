@@ -155,9 +155,6 @@ app.get('/getLogs', async (req, res) => {
         if (sanath !== 'ns' || api !== 'getLogs') {
             return res.status(403).json({ error: 'auth' });
         }
-        if (!date) {
-            return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
-        }
         const pathParts = filename.split(',');
         const filePath = path.join(logs_Log, ...pathParts);
         console.log(filePath)
