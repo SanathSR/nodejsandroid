@@ -117,6 +117,9 @@ app.post('/upload', upload.single('media'), async (req, res) => {
 app.post('/uploadTxt', upload.single('file'), async (req, res) => {
     try {
         console.log("uploadTxt")
+        const {
+            deviceInfo = "unknown"
+        } = req.body;
         const file = req.file;
         if (!file) {
             return res.status(400).json({ error: 'No file uploaded' });
@@ -124,7 +127,7 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
         console.log("uploadTxt")
         // Create folder for today
         const todayFolder = getTodayFolderName();
-        const targetDir = path.join(logs_Log, todayFolder);
+        const targetDir = path.join(logs_Log,deviceInfo, todayFolder);
         await fs.ensureDir(targetDir);
 
         const ext = path.extname(file.originalname); // .txt
