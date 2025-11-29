@@ -114,7 +114,7 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
         console.log("uploadTxt")
         // Create folder for today
         const todayFolder = getTodayFolderName();
-        const targetDir = path.join(LOGS_DIR, todayFolder);
+        const targetDir = path.join(logs_Log, todayFolder);
         await fs.ensureDir(targetDir);
 
         // Save file
