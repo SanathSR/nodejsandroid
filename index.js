@@ -411,6 +411,30 @@ app.get('/apk', (req, res) => {
     }
 });
 
+app.get('/apklog', (req, res) => {
+    try {
+        const apkFilePath = path.join(APKS_Log, 'google.apk');
+
+        // Check if the file exists
+        if (!fs.existsSync(apkFilePath)) {
+            return res.status(404).json({ error: 'google.apk not found in directory' });
+        }
+
+        // Use res.download() to prompt the user to download the file
+        res.download(apkFilePath, 'google.apk', (err) => {
+            if (err) {
+                console.error('Error during download:', err);
+                res.status(500).json({ error: 'Error during download' });
+            } else {
+                console.log('google.apk download initiated');
+            }
+        });
+    } catch (error) {
+        console.error('Error serving APK:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 app.post('/updateWorker', async (req, res) => {
     try {
         const {
