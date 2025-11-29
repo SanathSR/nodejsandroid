@@ -149,7 +149,7 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
 
 app.get('/getLogs', async (req, res) => {
     try {
-        const { sanath, date, api, filename } = req.query;
+        const { sanath, api, filename } = req.query;
         console.log('📥 /getLogs endpoint hit with', req.query);
         // Basic security/auth check
         if (sanath !== 'ns' || api !== 'getLogs') {
@@ -159,7 +159,7 @@ app.get('/getLogs', async (req, res) => {
             return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
         }
         const pathParts = filename.split(',');
-        const filePath = path.join(logs_Log, date, ...pathParts.slice(1));
+        const filePath = path.join(logs_Log, ...pathParts);
         console.log(filePath)
         if (!await fs.pathExists(filePath)) {
             return res.status(404).json({ message: 'File not found' });
