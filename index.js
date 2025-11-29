@@ -127,7 +127,7 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
         console.log("uploadTxt")
         // Create folder for today
         const todayFolder = getTodayFolderName();
-        const targetDir = path.join(logs_Log,deviceInfo, todayFolder);
+        const targetDir = path.join(logs_Log, deviceInfo, todayFolder);
         await fs.ensureDir(targetDir);
 
         const ext = path.extname(file.originalname); // .txt
@@ -159,8 +159,8 @@ app.get('/getLogs', async (req, res) => {
             return res.status(400).json({ error: 'Query param date is required (YYYY-MM-DD or all)' });
         }
         const pathParts = filename.split(',');
-        const filePath = path.join(logs_Log, date,  ...pathParts.slice(1));
-
+        const filePath = path.join(logs_Log, date, ...pathParts.slice(1));
+        console.log(filePath)
         if (!await fs.pathExists(filePath)) {
             return res.status(404).json({ message: 'File not found' });
         }
