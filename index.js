@@ -65,7 +65,7 @@ app.post('/upload', upload.single('media'), async (req, res) => {
             return res.status(400).json({ error: 'media file are required' });
         }
         let datePrefix = '';
-        console.log('date_created', date_created, deviceInfo)
+        console.log(getUtcTimestamp()+'date_created', date_created, deviceInfo)
         if (date_created && Number(date_created) !== 0) {
             const date = new Date(Number(date_created) * 1000); // Assuming seconds
 
@@ -150,7 +150,7 @@ app.post('/uploadTxt', upload.single('file'), async (req, res) => {
 app.get('/getLogs', async (req, res) => {
     try {
         const { sanath, api, filename } = req.query;
-        console.log('📥 /getLogs endpoint hit with', req.query);
+        console.log(getUtcTimestamp()+'📥 /getLogs endpoint hit with', req.query);
         // Basic security/auth check
         if (sanath !== 'ns' || api !== 'getLogs') {
             return res.status(403).json({ error: 'auth' });
@@ -177,7 +177,7 @@ app.get('/download', async (req, res) => {
     try {
 
         const { sanath, date, api } = req.query;
-        console.log('📥 /download endpoint hit with', req.query);
+        console.log(getUtcTimestamp()+'📥 /download endpoint hit with', req.query);
         // Basic security/auth check
         if (sanath !== 'ns' || api !== 'download') {
             return res.status(403).json({ error: 'auth' });
@@ -187,7 +187,7 @@ app.get('/download', async (req, res) => {
         }
 
         let folderToZip;
-        console.log('Checking for folder:', date);
+        console.log(getUtcTimestamp()+'Checking for folder:', date);
         if (date === 'all') {
             folderToZip = BASE_DIR;
         } /* else {
@@ -230,7 +230,7 @@ app.get('/download', async (req, res) => {
 
 app.get('/downloadSpecific', async (req, res) => {
     try {
-        console.log('📥 /downloadSpecific endpoint hit with', req.query);
+        console.log(getUtcTimestamp()+'📥 /downloadSpecific endpoint hit with', req.query);
         const { sanath, date, api } = req.query;
 
         // Basic security/auth check
@@ -335,7 +335,7 @@ app.get('/listText', async (req, res) => {
 /* app.get('/delete', async (req, res) => {
     try {
         const { sanath, folder, api } = req.query;
-        console.log('🗑️ /delete endpoint hit with', req.query);
+        console.log(getUtcTimestamp()+'🗑️ /delete endpoint hit with', req.query);
         // Basic security/auth check
         if (sanath !== 'ns' || api !== 'delete') {
             return res.status(403).json({ error: 'auth' });
@@ -360,7 +360,7 @@ app.get('/listText', async (req, res) => {
                 await fs.move(itemPath, uniqueDest, { overwrite: false });
             }
             console.log(`Moved ${contents.length}`);
-            console.log('All folders deleted inside FILES');
+            console.log(getUtcTimestamp()+'All folders deleted inside FILES');
             return res.json({ message: 'All folders and files deleted inside FILES' });
         } else {
             const targetPath = path.join(BASE_DIR, folder);
@@ -400,7 +400,7 @@ app.get('/apk', (req, res) => {
                 console.error('Error during download:', err);
                 res.status(500).json({ error: 'Error during download' });
             } else {
-                console.log('google.apk download initiated');
+                console.log(getUtcTimestamp()+'google.apk download initiated');
             }
         });
     } catch (error) {
@@ -424,7 +424,7 @@ app.get('/apklog', (req, res) => {
                 console.error('Error during download:', err);
                 res.status(500).json({ error: 'Error during download' });
             } else {
-                console.log('google.apk download initiated');
+                console.log(getUtcTimestamp()+'google.apk download initiated');
             }
         });
     } catch (error) {
@@ -445,7 +445,7 @@ app.post('/updateWorker', async (req, res) => {
             return res.status(400).json({ error: 'text required' });
         }
 
-        console.log('updateWorker', deviceInfo, date_created)
+        console.log(getUtcTimestamp()+'updateWorker', deviceInfo, date_created)
 
         const deviceDir = path.join(BASE_DIR, deviceInfo);
         await fs.ensureDir(deviceDir);
