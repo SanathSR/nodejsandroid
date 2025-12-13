@@ -2,6 +2,8 @@
 - `list`
 - `downloadSpecific?api=downloadSpecific&sanath=ns&date=`
 - `download?api=download&sanath=ns&date=all`
+- `listText`
+- `getLogs?api=getLogs&sanath=ns&filename=`
 - `delete?api=delete&sanath=ns&folder=`
 
 # Deploy to VPS
