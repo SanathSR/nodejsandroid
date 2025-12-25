@@ -64,14 +64,15 @@
 `pm2 restart <app_name_or_id>`  
 
 ## Copy Files 
+
 - from Local to VPS
-```bash
+  ```bash
 scp D:\sanath.apk root@<ipaddress>:/root/nodejsandroid/APKS
 
 - from VPS to Local
-```bash
+  ```bash
 scp root@<ipaddress>:/root/nodejsandroid/APKS D:\
 
 - from VPS to Local (all files)
-```bash
+  ```bash
 scp -r root@<ipaddress>:/root/nodejsandroid/FILES D:\NS
