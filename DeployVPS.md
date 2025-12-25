@@ -1,5 +1,6 @@
 # API
-- `list`
+- ```javascript
+  list
 - `downloadSpecific?api=downloadSpecific&sanath=ns&date=`
 - `download?api=download&sanath=ns&date=all`
 - `listText`
