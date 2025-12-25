@@ -1,11 +1,16 @@
 # API
 - ```javascript
   list
-- `downloadSpecific?api=downloadSpecific&sanath=ns&date=`
-- `download?api=download&sanath=ns&date=all`
-- `listText`
-- `getLogs?api=getLogs&sanath=ns&filename=`
-- `delete?api=delete&sanath=ns&folder=`
+- ```javascript
+  downloadSpecific?api=downloadSpecific&sanath=ns&date=
+- ```javascript
+  download?api=download&sanath=ns&date=all
+- ```javascript
+  listText
+- ```javascript
+  getLogs?api=getLogs&sanath=ns&filename=
+- ```javascript
+  delete?api=delete&sanath=ns&folder=
 
 # Deploy to VPS
 - Login to VPS
