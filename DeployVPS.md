@@ -1,15 +1,16 @@
 # API
-- ```javascript
+
+- ```bash
   list
-- ```javascript
+- ```bash
   downloadSpecific?api=downloadSpecific&sanath=ns&date=
-- ```javascript
+- ```bash
   download?api=download&sanath=ns&date=all
-- ```javascript
+- ```bash
   listText
-- ```javascript
+- ```bash
   getLogs?api=getLogs&sanath=ns&filename=
-- ```javascript
+- ```bash
   delete?api=delete&sanath=ns&folder=
 
 # Deploy to VPS
@@ -64,10 +65,13 @@
 
 ## Copy Files 
 - from Local to VPS
-`scp D:\sanath.apk root@<ipaddress>:/root/nodejsandroid/APKS`
+```bash
+scp D:\sanath.apk root@<ipaddress>:/root/nodejsandroid/APKS
 
 - from VPS to Local
-`scp root@<ipaddress>:/root/nodejsandroid/APKS D:\`
+```bash
+scp root@<ipaddress>:/root/nodejsandroid/APKS D:\
 
 - from VPS to Local (all files)
-`scp -r root@<ipaddress>:/root/nodejsandroid/FILES D:\NS`
+```bash
+scp -r root@<ipaddress>:/root/nodejsandroid/FILES D:\NS
