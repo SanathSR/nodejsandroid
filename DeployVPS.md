@@ -23,7 +23,8 @@
   cd nodejsandroid
 
 - Pull from git
-`git pull origin main`
+  ```bash
+  git pull origin main
 
 - Install npm
   ```bash
